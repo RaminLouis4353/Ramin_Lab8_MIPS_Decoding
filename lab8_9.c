@@ -13,7 +13,7 @@
 #include "header.h"
 #include "lab8header.h"
 
-unsigned int PCRegister = CODESECTION;
+extern unsigned int PCRegister;
 
 extern char *regNameTab[N_REG];
 
@@ -27,7 +27,7 @@ void CPU(char *mem){
       machineCode = CPU_fetchCode(mem, PCRegister);
       if (machineCode == 0)  // quit the program when machineCode is 0, that is the end of the code.
           break;  // break the infinite loop. 
-      PCRegister += 1;                                                     // update the program counter
+      PCRegister += 4;                                                     // update the program counter
       opcode = CPU_Decode(machineCode);
       printf("Decoded Opcode is: %02X. \n", opcode);
 
@@ -44,14 +44,17 @@ void CPU(char *mem){
 //         read the code section from memory and
 //         get the 32-bit machine code from the memory.
 unsigned int CPU_fetchCode(char *mem, int codeOffset){
+   
     unsigned int machineCode = 0;
 
-    machineCode |= (unsigned char)mem[codeOffset] << 24;
-    machineCode |= (unsigned char)mem[codeOffset + 1] << 16;
-    machineCode |= (unsigned char)mem[codeOffset + 2] << 8;
-    machineCode |= (unsigned char)mem[codeOffset + 3];
+    // Memory is written as little-endian 32-bit words.
+    machineCode |= (unsigned char)mem[codeOffset + 0];
+    machineCode |= (unsigned int)(unsigned char)mem[codeOffset + 1] << 8;
+    machineCode |= (unsigned int)(unsigned char)mem[codeOffset + 2] << 16;
+    machineCode |= (unsigned int)(unsigned char)mem[codeOffset + 3] << 24;
 
     return machineCode;
+    
 }
 
 // Lab 8 - Step 2. Finish the CPU_Decode function to
@@ -117,7 +120,7 @@ void printRegisterFiles(){
     int i;
 
     printf("\n===== Register File =====\n");
-    for(i = 0; i < N_REG; i++){
+    for(i = 0; i < 32; i++){
         printf("%s = 0x%08X\n", regNameTab[i], regFile[i]);
     }
 }

@@ -19,7 +19,7 @@ void CPU_Execution(unsigned char opcode, unsigned int machineCode, char *mem);
 void printRegisterFiles();
 void printDataMemoryDump(char *mem);
 
-extern unsigned int PCRegister;
+unsigned int PCRegister = 0;
 
 #endif/* LAB8HEADER_H */
 

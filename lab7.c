@@ -215,6 +215,7 @@ void setupInstructionMemory( char* base_memory_address,
                  (strcmp(instructionStorage[i].instruction, "END") == 0 ))
         {
             // No need to worry about this. This is the end of code indicator.
+            write_dword(base_memory_address, codeOffset+i*4, 0); // terminate code section
             break;  // exit here.
         }
         i++;
